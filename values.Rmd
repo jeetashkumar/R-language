@@ -1,0 +1,112 @@
+---
+title: "Untitled"
+output:
+  pdf_document: default
+  html_document: default
+date: "2024-05-05"
+---
+
+
+
+```{r}
+library(readxl)
+riseholme_data_24_1_ <- read_excel("C:/Users/Lenovo/Desktop/R/riseholme_data_24(1).xlsx")
+View(riseholme_data_24_1_)
+
+```
+
+
+```{r}
+library(readxl)
+library(dplyr)
+library(broom)
+
+```
+
+
+```{r}
+str(riseholme_data_24_1_)
+
+```
+
+
+
+```{r}
+summary(riseholme_data_24_1_)
+
+
+```
+
+
+```{r}
+library(tibble)
+library(ggplot2)
+
+```
+
+
+```{r}
+model <- lm(tree_DBH ~ neigh_5m + max_neigh_dbh + ground_cover, data = riseholme_data_24_1_)
+
+```
+
+
+```{r}
+summary_model <- summary(model)
+
+```
+
+
+```{r}
+coefficients <- summary_model$coefficients
+coefficients
+
+```
+
+
+```{r}
+# Get predicted values from the model
+riseholme_data_24_1_$predicted_tree_DBH <- predict(model)
+
+# Scatter plot of actual vs predicted tree_DBH
+plot(riseholme_data_24_1_$predicted_tree_DBH, riseholme_data_24_1_$tree_DBH,
+     xlab = "Predicted Tree DBH", ylab = "Actual Tree DBH",
+     main = "Actual vs Predicted Tree DBH")
+abline(0, 1, col = "red") 
+
+```
+
+```{r}
+
+# Load the GGally package for ggpairs
+library(GGally)
+
+# Create a scatterplot matrix
+ggpairs(riseholme_data_24_1_[c("tree_DBH", "neigh_5m", "max_neigh_dbh", "ground_cover")])
+```
+
+```{r}
+# Load the ggplot2 package
+library(ggplot2)
+
+# Create a boxplot of tree_DBH by ground_cover
+ggplot(riseholme_data_24_1_, aes(x = as.factor(ground_cover), y = tree_DBH)) +
+  geom_boxplot() +
+  xlab("Ground Cover") +
+  ylab("Tree DBH") +
+  ggtitle("Distribution of Tree DBH by Ground Cover")
+
+
+```
+
+```{r}
+# Create a density plot of tree_DBH by ground_cover
+ggplot(riseholme_data_24_1_, aes(x = tree_DBH, fill = as.factor(ground_cover))) +
+  geom_density(alpha = 0.5) +
+  xlab("Tree DBH") +
+  ylab("Density") +
+  ggtitle("Density Plot of Tree DBH by Ground Cover")
+
+
+```
+
